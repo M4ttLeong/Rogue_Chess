@@ -409,7 +409,18 @@ MonoBehaviour:
   WhiteSquare: {fileID: 656195119247470718, guid: fbb83e91e5fe3104db1ed9d6e6f06641, type: 3}
   BlackSquare: {fileID: 2717375648045391819, guid: 9b5da398b0d829c4294b72802e22b1f7, type: 3}
   squareSize: 1
-  Pawn: {fileID: 8981429185070615361, guid: e456c5c59c5976d41ae77e62d5ee8842, type: 3}
+  WhitePawn: {fileID: 8981429185070615361, guid: e456c5c59c5976d41ae77e62d5ee8842, type: 3}
+  BlackPawn: {fileID: 5078548289377462989, guid: e153206d3bb2f7c4e97e4d58f5663bb5, type: 3}
+  WhiteRook: {fileID: 5716115193554833619, guid: a96c1628917b25642b5dc432538bb0ed, type: 3}
+  BlackRook: {fileID: 7686612776166934121, guid: 44ce0159d3ac5374aa869e747476fc9d, type: 3}
+  WhiteKnight: {fileID: 3748142007001637752, guid: 5a813176b8596664ab45863d86c11bcf, type: 3}
+  BlackKnight: {fileID: 9143428188646270281, guid: 86c4156897949e440898d720377ab115, type: 3}
+  WhiteBishop: {fileID: 1497109174996848115, guid: ee71768c12637054690c41b07fe1656e, type: 3}
+  BlackBishop: {fileID: 7433182259692969814, guid: d13b6ddcc81988143b74d5c6121d68af, type: 3}
+  WhiteKing: {fileID: 4295222200812725706, guid: d9dac2fcfac910e41bc05ce49ead0a38, type: 3}
+  BlackKing: {fileID: 7719890315299731522, guid: 61a6783d4c41b3045a8c44f64f82b853, type: 3}
+  WhiteQueen: {fileID: 4760659743644235604, guid: fb5636e69cdfc3d4b862cd45a451ac44, type: 3}
+  BlackQueen: {fileID: 2218944808138227064, guid: 9e458ac9ea841284c9e0d370a79bafd0, type: 3}
 --- !u!4 &940215579
 Transform:
   m_ObjectHideFlags: 0
