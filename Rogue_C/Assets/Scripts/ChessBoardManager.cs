@@ -82,6 +82,7 @@ public class ChessBoardManager : MonoBehaviour
         }
 
         InitPawns();
+        InitRooks();
     }
 
     private void InitPawns()
@@ -117,6 +118,35 @@ public class ChessBoardManager : MonoBehaviour
 
             //In the chessboard set that this piece is here
             chessboard[1, i].occupyingPiece = blackPawnComp;
+        }
+    }
+
+    private void InitRooks()
+    {
+        //White Rooks
+        for (int i = 0; i < 2; ++i)
+        {
+            GameObject whiteRook = Instantiate(WhiteRook);
+            Vector3 pos = new Vector3(i * 7, 0, 0);
+            whiteRook.transform.position = pos;
+
+            //Init white rook gameplay piece
+            Piece whiteRookComp = whiteRook.GetComponent<Piece>();
+            whiteRookComp.Initialize(Piece.PieceColor.White, new Vector2Int(7, i * 7), this);
+            chessboard[7, i * 7].occupyingPiece = whiteRookComp;
+        }
+
+        //Black Rooks
+        for (int i = 0; i < 2; ++i)
+        {
+            GameObject blackRook = Instantiate(BlackRook);
+            Vector3 pos = new Vector3(i * 7, 0, 7 * squareSize);
+            blackRook.transform.position = pos;
+
+            //Init white rook gameplay piece
+            Piece blackRookComp = blackRook.GetComponent<Piece>();
+            blackRookComp.Initialize(Piece.PieceColor.Black, new Vector2Int(0, i * 7), this);
+            chessboard[0, i * 7].occupyingPiece = blackRookComp;
         }
     }
 

@@ -30,10 +30,11 @@ public class PawnPiece : Piece
         
         //Init list to return
         List<Vector2Int> moves = new List<Vector2Int>();
-        Debug.Log("X: " + currPos.x + " Y: " + currPos.y);
+        
+        /*Debug.Log("X: " + currPos.x + " Y: " + currPos.y);
         Debug.Log("X + 1: " + (currPos.x + forwardMovement) + " Y: " + currPos.y);
         Debug.Log("X + 2: " + (currPos.x + (2 * forwardMovement)) + " Y: " + currPos.y);
-        Debug.Log("X + 1: " + (currPos.x + forwardMovement) + " Y + 1: " + (currPos.y + 1));
+        Debug.Log("X + 1: " + (currPos.x + forwardMovement) + " Y + 1: " + (currPos.y + 1));*/
         //1)
         if (IsWithinBounds(new Vector2Int(currPos.x + forwardMovement, currPos.y)))
         {
