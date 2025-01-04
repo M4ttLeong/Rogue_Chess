@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3509761679676305166}
   - component: {fileID: 6969210167641983197}
   - component: {fileID: 1051185398495873871}
+  - component: {fileID: -2607026337971378506}
   m_Layer: 0
   m_Name: WhiteSquare
   m_TagString: Untagged
@@ -108,3 +109,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-2607026337971378506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656195119247470718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04944a9b5de1e1d4f89dfbb73ae3d6a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 0, y: 0}
+  occupyingPiece: {fileID: 0}

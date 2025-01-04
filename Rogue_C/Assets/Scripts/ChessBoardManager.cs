@@ -23,7 +23,101 @@ public class ChessBoardManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        InitBoard();
+        //InitBoard();
+        InitBoard2();
+    }
+
+    public Square[,] GetChessBoard()
+    {
+        return chessboard;
+    }
+
+    private void InitBoard2()
+    {
+        Color squareColor;
+        //0,0 corresponds to a8 on a chessboard a white square
+        for (int i = 0; i < 8; i++)
+        {
+            if (i % 2 == 0)
+            {
+                squareColor = Color.white;
+            }
+            else
+            {
+                squareColor = Color.black;
+            }
+
+            for (int j = 0; j < 8; j++)
+            {
+                //chessboard[i, j] = new Square(new Vector2(i, j), squareColor);
+
+                //Create visual representation
+                GameObject squarePrefab = squareColor == Color.white ? WhiteSquare : BlackSquare;
+                GameObject squareVisual = Instantiate(squarePrefab);
+
+                Vector3 position = new Vector3(j * squareSize, -0.5f, 7 - i * squareSize);
+
+                squareVisual.transform.position = position;
+
+                squareVisual.transform.parent = transform;
+
+                //Initialize the square game part
+
+                Square squareComp = squareVisual.GetComponent<Square>();
+                squareComp.Initialize(squareColor);
+
+                chessboard[i,j] = squareComp;
+
+
+                //alternate the square color for the next iteration of j
+                if (squareColor == Color.black)
+                {
+                    squareColor = Color.white;
+                }
+                else
+                {
+                    squareColor = Color.black;
+                }
+            }
+        }
+
+        InitPawns();
+    }
+
+    private void InitPawns()
+    {
+        //Pawns, they're on i = 6 (white) and 1 (black
+        //White Pawns
+        for (int i = 0; i < 8; ++i)
+        {
+            //Create white pawn representation
+            GameObject whitePawn = Instantiate(WhitePawn);
+            Vector3 pos = new Vector3(i * squareSize, 0, 1 * squareSize);
+            whitePawn.transform.position = pos;
+
+            //For each white pawn need to initialize the actual gameplay piece
+            Piece whitePawnComp = whitePawn.GetComponent<Piece>();
+            whitePawnComp.Initialize(Piece.PieceColor.White, new Vector2Int(6, i), this);
+
+            //In the chessboard set that this piece is here
+            chessboard[6, i].occupyingPiece = whitePawnComp;
+        }
+
+
+        //Black Pawns
+        for (int i = 0; i < 8; ++i)
+        {
+            GameObject blackPawn = Instantiate(BlackPawn);
+            Vector3 pos = new Vector3(i * squareSize, 0, 6 * squareSize);
+            blackPawn.transform.position = pos;
+
+            //For each black pawn need to initialize the actual gameplay piece
+            Piece blackPawnComp = blackPawn.GetComponent<Piece>();
+            blackPawnComp.Initialize(Piece.PieceColor.Black, new Vector2Int(1, i), this);
+
+            //In the chessboard set that this piece is here
+            chessboard[1, i].occupyingPiece = blackPawnComp;
+        }
     }
 
     private void InitBoard()
@@ -43,7 +137,7 @@ public class ChessBoardManager : MonoBehaviour
 
             for (int j = 0; j < 8; j++)
             {
-                chessboard[i, j] = new Square(new Vector2(i, j), squareColor);
+                //chessboard[i, j] = new Square(new Vector2(i, j), squareColor);
 
                 //create visual representation
                 GameObject squarePrefab = squareColor == Color.white ? WhiteSquare : BlackSquare;
@@ -72,9 +166,17 @@ public class ChessBoardManager : MonoBehaviour
         //White Pawns
         for(int i = 0; i < 8; ++i)
         {
+            //Create white pawn representation
             GameObject whitePawn = Instantiate(WhitePawn);
             Vector3 pos = new Vector3(i * squareSize, 0, 1 * squareSize);
             whitePawn.transform.position = pos;
+
+            //For each white pawn need to initialize the actual gameplay piece
+            Piece whitePawnComp = whitePawn.GetComponent<Piece>();
+            whitePawnComp.Initialize(Piece.PieceColor.White, new Vector2Int(i, 1), this);
+
+            //In the chessboard set that this piece is here
+            chessboard[i, 1].occupyingPiece = whitePawnComp;
         }
 
 
@@ -154,6 +256,12 @@ public class ChessBoardManager : MonoBehaviour
         GameObject blackQueen = Instantiate(BlackQueen);
         Vector3 pos4 = new Vector3(3 * squareSize, 0, 7 * squareSize);
         blackQueen.transform.position = pos4;
+    }
+
+    public Piece isSquareOccupied(int x, int y)
+    {
+        Debug.Log("Is there a piece in this square: " + chessboard[x, y].occupyingPiece);
+        return chessboard[x,y].occupyingPiece;
     }
 
     // Update is called once per frame
