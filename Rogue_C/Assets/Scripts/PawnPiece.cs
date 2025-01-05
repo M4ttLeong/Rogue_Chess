@@ -24,6 +24,7 @@ public class PawnPiece : Piece
         //3) If there a piece on either forward diagonal, the pawn can capture the piece and move there
         //4) If an enemy pawn moves forward 2 squares putting it side by side with your pawn, you can go to the enemy pawn's diagonal and capture
         //en passant. You only have this option the turn the enemy pawn moved foward 2 squares
+        //5) Not really a different move but would need to be handled here, promotion
 
         //First find out the pieces's current position:
         Vector2Int currPos = this.position;

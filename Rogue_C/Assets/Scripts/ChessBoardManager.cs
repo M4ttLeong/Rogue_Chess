@@ -83,6 +83,10 @@ public class ChessBoardManager : MonoBehaviour
 
         InitPawns();
         InitRooks();
+        InitKnights();
+        InitBishops();
+        InitQueens();
+        InitKings();
     }
 
     private void InitPawns()
@@ -148,6 +152,102 @@ public class ChessBoardManager : MonoBehaviour
             blackRookComp.Initialize(Piece.PieceColor.Black, new Vector2Int(0, i * 7), this);
             chessboard[0, i * 7].occupyingPiece = blackRookComp;
         }
+    }
+
+    private void InitKnights()
+    {
+        for (int i = 0; i < 2; ++i)
+        {
+            GameObject whiteKnight = Instantiate(WhiteKnight);
+            Vector3 pos = new Vector3((i * 5) + 1, 0, 0);
+            whiteKnight.transform.position = pos;
+
+            Piece whiteKnightComp = whiteKnight.GetComponent<Piece>();
+            whiteKnightComp.Initialize(Piece.PieceColor.White, new Vector2Int(7, (i * 5) + 1), this);
+            chessboard[7, (i * 5) + 1].occupyingPiece = whiteKnightComp;
+        }
+
+        //Black Knights
+        for (int i = 0; i < 2; ++i)
+        {
+            GameObject blackKnight = Instantiate(BlackKnight);
+            Vector3 pos = new Vector3((i * 5) + 1, 0, 7 * squareSize);
+            blackKnight.transform.position = pos;
+
+            Piece blackKnightComp = blackKnight.GetComponent<Piece>();
+            blackKnightComp.Initialize(Piece.PieceColor.Black, new Vector2Int(0, (i * 5) + 1), this);
+            chessboard[0, (i * 5) + 1].occupyingPiece = blackKnightComp;
+        }
+    }
+
+    private void InitBishops()
+    {
+        //White Bishops
+        for (int i = 0; i < 2; ++i)
+        {
+            GameObject whiteBishop = Instantiate(WhiteBishop);
+            Vector3 pos = new Vector3((i * 3) + 2, 0, 0);
+            whiteBishop.transform.position = pos;
+
+            Piece whiteBishopComp = whiteBishop.GetComponent<Piece>();
+            whiteBishopComp.Initialize(Piece.PieceColor.White, new Vector2Int(7, (i * 3) + 2), this);
+            chessboard[7, (i * 3) + 2].occupyingPiece = whiteBishopComp;
+        }
+
+        //Black Bishops
+        for (int i = 0; i < 2; ++i)
+        {
+            GameObject blackBishop = Instantiate(BlackBishop);
+            Vector3 pos = new Vector3((i * 3) + 2, 0, 7 * squareSize);
+            blackBishop.transform.position = pos;
+
+            Piece blackBishopComp = blackBishop.GetComponent<Piece>();
+            blackBishopComp.Initialize(Piece.PieceColor.Black, new Vector2Int(0, (i * 3) + 2), this);
+            chessboard[0, (i * 3) + 2].occupyingPiece = blackBishopComp;
+        }
+    }
+
+    private void InitQueens()
+    {
+        //White Queen
+        GameObject whiteQueen = Instantiate(WhiteQueen);
+        Vector3 pos3 = new Vector3(3 * squareSize, 0, 0);
+        whiteQueen.transform.position = pos3;
+
+        Piece whiteQueenComp = whiteQueen.GetComponent<Piece>();
+        whiteQueenComp.Initialize(Piece.PieceColor.White, new Vector2Int(7, 3), this);
+        chessboard[7,3].occupyingPiece= whiteQueenComp;
+
+        //Black Queen
+
+        GameObject blackQueen = Instantiate(BlackQueen);
+        Vector3 pos4 = new Vector3(3 * squareSize, 0, 7 * squareSize);
+        blackQueen.transform.position = pos4;
+
+        Piece blackQueenComp = blackQueen.GetComponent<Piece>();
+        blackQueenComp.Initialize(Piece.PieceColor.Black, new Vector2Int(0, 3), this);
+        chessboard[0, 3].occupyingPiece = blackQueenComp;
+    }
+
+    private void InitKings()
+    {
+        //White King
+        GameObject whiteKing = Instantiate(WhiteKing);
+        Vector3 pos1 = new Vector3(4 * squareSize, 0, 0);
+        whiteKing.transform.position = pos1;
+
+        Piece whiteKingComp = whiteKing.GetComponent<Piece>();
+        whiteKingComp.Initialize(Piece.PieceColor.White, new Vector2Int(7,4), this);
+        chessboard[7, 4].occupyingPiece = whiteKingComp;
+
+        //Black King
+        GameObject blackKing = Instantiate(BlackKing);
+        Vector3 pos2 = new Vector3(4 * squareSize, 0, 7 * squareSize);
+        blackKing.transform.position = pos2;
+
+        Piece blackKingComp = blackKing.GetComponent<Piece>();
+        blackKingComp.Initialize(Piece.PieceColor.Black, new Vector2Int(0, 4), this);
+        chessboard[0, 4].occupyingPiece = blackKingComp;
     }
 
     private void InitBoard()
