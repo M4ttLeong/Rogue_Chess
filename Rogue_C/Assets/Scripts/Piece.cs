@@ -17,10 +17,15 @@ public abstract class Piece : MonoBehaviour
     private List<Vector2Int> availMoves;
 
     private ChessBoardManager chessboardManager;
+    //Could set up the current square in the init step
 
+    private void Start()
+    {
+        //availMoves need to be updated after each turn
+        availMoves = GetAvailableMoves(chessboardManager);
+    }
     private void OnMouseEnter()
     {
-        availMoves = GetAvailableMoves(chessboardManager);
         ShowAvailableMoves(availMoves);
         //DebugHighLight(Color.red);
     }
@@ -41,7 +46,7 @@ public abstract class Piece : MonoBehaviour
         if (isDragging)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Vector3 mousePosition = hit.point;
                 transform.position = new Vector3(mousePosition.x, 0.5f, mousePosition.z);
@@ -51,8 +56,36 @@ public abstract class Piece : MonoBehaviour
 
     private void OnMouseUp()
     {
+        Square startingSquare = chessboardManager.GetSquare(position.x, position.y);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Square square = hit.collider.GetComponent<Square>();
+            if(square != null)
+            {
+                //Need to check if the square we're moving to is valid
+                if (availMoves.Contains(square.position))
+                {
+                    //Need to change occupying piece to null for square the piece was on previously
+                    startingSquare.occupyingPiece = null;
+
+                    square.occupyingPiece = this;
+
+                    //update the position of the piece as well
+                    this.position = square.position;
+
+                    transform.position = new Vector3(square.position.y, 0f, 7 - square.position.x);
+
+                    availMoves = GetAvailableMoves(chessboardManager);
+                    //Debug.Log("Let go of piece at square: " + square.PositionToChessNotation(square.position));
+                } else
+                {
+                    transform.position = new Vector3(this.position.y, 0f, 7 - this.position.x);
+                }
+            }
+        }
         isDragging = false;
-        ResetPosition();
+        //ResetPosition();
     }
 
     private void ResetPosition()

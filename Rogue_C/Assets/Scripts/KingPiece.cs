@@ -40,11 +40,11 @@ public class KingPiece : Piece
         {
             if (IsWithinBounds(move))
             {
-                if (!cBM.isSquareOccupied(move.x, move.y))
+                if (!cBM.IsSquareOccupied(move.x, move.y))
                 {
                     moves.Add(move);
                 }
-                else if (cBM.isSquareOccupied(move.x, move.y).color != this.color)
+                else if (cBM.IsSquareOccupied(move.x, move.y).color != this.color)
                 {
                     moves.Add(move);
                 }

@@ -39,7 +39,7 @@ public class PawnPiece : Piece
         //1)
         if (IsWithinBounds(new Vector2Int(currPos.x + forwardMovement, currPos.y)))
         {
-            if (cBM.isSquareOccupied(currPos.x + forwardMovement, currPos.y) == null)
+            if (cBM.IsSquareOccupied(currPos.x + forwardMovement, currPos.y) == null)
             {
                 moves.Add(new Vector2Int(currPos.x + forwardMovement, currPos.y));
             }
@@ -48,7 +48,7 @@ public class PawnPiece : Piece
         //2)
         if (!hasMoved)
         {
-            if (!cBM.isSquareOccupied(currPos.x + (2 * forwardMovement), currPos.y))
+            if (!cBM.IsSquareOccupied(currPos.x + (2 * forwardMovement), currPos.y))
             {
                 moves.Add(new Vector2Int(currPos.x + (2 * forwardMovement), currPos.y));
             }
@@ -60,7 +60,7 @@ public class PawnPiece : Piece
         Debug.Log("LOG: " + (currPos.x + forwardMovement) + ',' + (currPos.y - 1));
         if (IsWithinBounds(new Vector2Int(currPos.x + forwardMovement, currPos.y - 1)))
         {
-            piece1  = cBM.isSquareOccupied(currPos.x + forwardMovement, currPos.y - 1);
+            piece1  = cBM.IsSquareOccupied(currPos.x + forwardMovement, currPos.y - 1);
         } else
         {
             piece1 = null;
@@ -68,7 +68,7 @@ public class PawnPiece : Piece
 
         if (IsWithinBounds(new Vector2Int(currPos.x + forwardMovement, currPos.y + 1)))
         {
-            piece2 = cBM.isSquareOccupied(currPos.x + forwardMovement, currPos.y + 1);
+            piece2 = cBM.IsSquareOccupied(currPos.x + forwardMovement, currPos.y + 1);
         } else
         {
             piece2 = null;

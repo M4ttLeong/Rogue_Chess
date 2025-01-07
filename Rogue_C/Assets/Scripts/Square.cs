@@ -17,15 +17,17 @@ public class Square : MonoBehaviour
         renderer = GetComponent<Renderer>();
     }
 
-    public void Initialize(Color col)
+    public void Initialize(Color col, Vector2Int pos)
     {
         this.color = col;
         this.occupyingPiece = null;
+        this.position = pos;
     }
 
     private void OnMouseEnter()
     {
         //Highlight(Color.red);
+        Debug.Log("Square pos: " + PositionToChessNotation(this.position));
     }
 
     private void OnMouseExit()
@@ -41,5 +43,14 @@ public class Square : MonoBehaviour
     public void ResetHighlight()
     {
         renderer.material.color = this.color;
+    }
+
+    public string PositionToChessNotation(Vector2Int position)
+    {
+        char file = (char)('a' + position.y);
+
+        int rank = 8 - position.x;
+
+        return $"{file}{rank}"; 
     }
 }

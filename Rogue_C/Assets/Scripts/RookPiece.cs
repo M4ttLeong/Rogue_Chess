@@ -20,11 +20,11 @@ public class RookPiece : Piece
         Vector2Int possibleMove = new Vector2Int(currPos.x + forwardMovement, currPos.y);
         while (IsWithinBounds(possibleMove))
         {
-            if (!cBM.isSquareOccupied(possibleMove.x, possibleMove.y))
+            if (!cBM.IsSquareOccupied(possibleMove.x, possibleMove.y))
             {
                 moves.Add(possibleMove);
                 possibleMove.x += forwardMovement;
-            } else if(cBM.isSquareOccupied(possibleMove.x, possibleMove.y).color != this.color)
+            } else if(cBM.IsSquareOccupied(possibleMove.x, possibleMove.y).color != this.color)
             {
                 moves.Add(possibleMove);
                 break;
@@ -38,12 +38,12 @@ public class RookPiece : Piece
         possibleMove = new Vector2Int(currPos.x - forwardMovement, currPos.y);
         while (IsWithinBounds(possibleMove))
         {
-            if (!cBM.isSquareOccupied(possibleMove.x, possibleMove.y))
+            if (!cBM.IsSquareOccupied(possibleMove.x, possibleMove.y))
             {
                 moves.Add(possibleMove);
                 possibleMove.x -= forwardMovement;
             }
-            else if (cBM.isSquareOccupied(possibleMove.x, possibleMove.y).color != this.color)
+            else if (cBM.IsSquareOccupied(possibleMove.x, possibleMove.y).color != this.color)
             {
                 moves.Add(possibleMove);
                 break;
@@ -58,12 +58,12 @@ public class RookPiece : Piece
         possibleMove = new Vector2Int(currPos.x, currPos.y - 1);
         while (IsWithinBounds(possibleMove))
         {
-            if (!cBM.isSquareOccupied(possibleMove.x, possibleMove.y))
+            if (!cBM.IsSquareOccupied(possibleMove.x, possibleMove.y))
             {
                 moves.Add(possibleMove);
                 possibleMove.y -= 1;
             }
-            else if (cBM.isSquareOccupied(possibleMove.x, possibleMove.y).color != this.color)
+            else if (cBM.IsSquareOccupied(possibleMove.x, possibleMove.y).color != this.color)
             {
                 moves.Add(possibleMove);
                 break;
@@ -78,12 +78,12 @@ public class RookPiece : Piece
         possibleMove = new Vector2Int(currPos.x, currPos.y + 1);
         while (IsWithinBounds(possibleMove))
         {
-            if (!cBM.isSquareOccupied(possibleMove.x, possibleMove.y))
+            if (!cBM.IsSquareOccupied(possibleMove.x, possibleMove.y))
             {
                 moves.Add(possibleMove);
                 possibleMove.y += 1;
             }
-            else if (cBM.isSquareOccupied(possibleMove.x, possibleMove.y).color != this.color)
+            else if (cBM.IsSquareOccupied(possibleMove.x, possibleMove.y).color != this.color)
             {
                 moves.Add(possibleMove);
                 break;

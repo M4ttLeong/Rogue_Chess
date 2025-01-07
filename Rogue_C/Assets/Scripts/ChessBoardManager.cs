@@ -64,7 +64,7 @@ public class ChessBoardManager : MonoBehaviour
                 //Initialize the square game part
 
                 Square squareComp = squareVisual.GetComponent<Square>();
-                squareComp.Initialize(squareColor);
+                squareComp.Initialize(squareColor, new Vector2Int(i,j));
 
                 chessboard[i,j] = squareComp;
 
@@ -82,11 +82,11 @@ public class ChessBoardManager : MonoBehaviour
         }
 
         InitPawns();
-        InitRooks();
-        InitKnights();
-        InitBishops();
-        InitQueens();
-        InitKings();
+        //InitRooks();
+        //InitKnights();
+        //InitBishops();
+        //InitQueens();
+        //InitKings();
     }
 
     private void InitPawns()
@@ -388,10 +388,15 @@ public class ChessBoardManager : MonoBehaviour
         blackQueen.transform.position = pos4;
     }
 
-    public Piece isSquareOccupied(int x, int y)
+    public Piece IsSquareOccupied(int x, int y)
     {
         Debug.Log("Is there a piece in this square: " + chessboard[x, y].occupyingPiece);
         return chessboard[x,y].occupyingPiece;
+    }
+
+    public Square GetSquare(int x, int y)
+    {
+        return chessboard[x, y];
     }
 
     // Update is called once per frame
