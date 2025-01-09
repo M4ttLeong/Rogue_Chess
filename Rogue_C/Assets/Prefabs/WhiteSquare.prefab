@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6969210167641983197}
   - component: {fileID: 1051185398495873871}
   - component: {fileID: -2607026337971378506}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WhiteSquare
   m_TagString: Untagged
   m_Icon: {fileID: 0}

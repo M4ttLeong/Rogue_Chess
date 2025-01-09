@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WhiteRook
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: abd5e3abddb83974ab6b56e71e0a1dd8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -119,3 +123,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dace7318f05a7d43b95205ab9c3119c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  squareLayerMask:
+    serializedVersion: 2
+    m_Bits: 128

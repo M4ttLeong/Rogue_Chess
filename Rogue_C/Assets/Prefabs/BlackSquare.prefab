@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2548582816175421609}
   - component: {fileID: 1756930720136924287}
   - component: {fileID: 5296133202287041516}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BlackSquare
   m_TagString: Untagged
   m_Icon: {fileID: 0}

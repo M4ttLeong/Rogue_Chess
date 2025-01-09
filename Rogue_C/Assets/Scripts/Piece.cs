@@ -19,6 +19,8 @@ public abstract class Piece : MonoBehaviour
     private ChessBoardManager chessboardManager;
     //Could set up the current square in the init step
 
+    [SerializeField] private LayerMask squareLayerMask;
+
     private void Start()
     {
         //availMoves need to be updated after each turn
@@ -26,65 +28,94 @@ public abstract class Piece : MonoBehaviour
     }
     private void OnMouseEnter()
     {
-        ShowAvailableMoves(availMoves);
-        //DebugHighLight(Color.red);
+        if (chessboardManager.getCanHoverOverPieces())
+        {
+            ShowAvailableMoves(availMoves);
+            //DebugHighLight(Color.red);
+        }
     }
 
     private void OnMouseExit()
     {
-        //ResetHighlight();
-        HideAvailableMoves(availMoves);
+        if (chessboardManager.getCanHoverOverPieces())
+        {
+            //ResetHighlight();
+            HideAvailableMoves(availMoves);
+        }
     }
 
     private void OnMouseDown()
     {
         isDragging = true;
+        //need to set canHoverOverPieces in the chessboard to false while dragging
+        chessboardManager.setCanHoverOverPieces(false);
     }
 
     private void OnMouseDrag()
     {
         if (isDragging)
         {
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);  // Horizontal plane at y = 0
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+
+            if (groundPlane.Raycast(ray, out float enter))
             {
-                Vector3 mousePosition = hit.point;
-                transform.position = new Vector3(mousePosition.x, 0.5f, mousePosition.z);
+                Vector3 mousePosition = ray.GetPoint(enter);  // Get the world point where the ray intersects the plane
+                transform.position = new Vector3(mousePosition.x, 0.5f, mousePosition.z);  // Move to that point
             }
         }
     }
 
     private void OnMouseUp()
     {
-        Square startingSquare = chessboardManager.GetSquare(position.x, position.y);
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        HideAvailableMoves(availMoves);
+        if (isDragging)
         {
-            Square square = hit.collider.GetComponent<Square>();
-            if(square != null)
+            Debug.Log("Mouse click released");
+            Square startingSquare = chessboardManager.GetSquare(position.x, position.y);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, squareLayerMask))
             {
-                //Need to check if the square we're moving to is valid
-                if (availMoves.Contains(square.position))
+                Square targetSquare = hit.collider.GetComponent<Square>();
+                Debug.Log("TARGET SQUARE: " + targetSquare);
+                if (targetSquare != null)
                 {
-                    //Need to change occupying piece to null for square the piece was on previously
-                    startingSquare.occupyingPiece = null;
+                    //Need to check if the square we're moving to is valid
+                    if (availMoves.Contains(targetSquare.position))
+                    {
+                        //Is there already a piece on that square?
+                        if (targetSquare.occupyingPiece != null)
+                        {
+                            Destroy(targetSquare.occupyingPiece.gameObject);
+                        }
+                        //Need to change occupying piece to null for square the piece was on previously
+                        startingSquare.occupyingPiece = null;
 
-                    square.occupyingPiece = this;
+                        targetSquare.occupyingPiece = this;
 
-                    //update the position of the piece as well
-                    this.position = square.position;
+                        //update the position of the piece as well
+                        this.position = targetSquare.position;
 
-                    transform.position = new Vector3(square.position.y, 0f, 7 - square.position.x);
+                        transform.position = new Vector3(targetSquare.position.y, 0f, 7 - targetSquare.position.x);
 
-                    availMoves = GetAvailableMoves(chessboardManager);
-                    //Debug.Log("Let go of piece at square: " + square.PositionToChessNotation(square.position));
-                } else
-                {
-                    transform.position = new Vector3(this.position.y, 0f, 7 - this.position.x);
+                        availMoves = GetAvailableMoves(chessboardManager);
+                        //Debug.Log("Let go of piece at square: " + square.PositionToChessNotation(square.position));
+                    }
+                    else
+                    {
+                        transform.position = new Vector3(this.position.y, 0f, 7 - this.position.x);
+                    }
                 }
+            } else
+            {
+                //We did not hit a square in our raycast
+                transform.position = new Vector3(this.position.y, 0f, 7 - this.position.x);
+
             }
+            isDragging = false;
+            chessboardManager.setCanHoverOverPieces(true);
+            
         }
-        isDragging = false;
         //ResetPosition();
     }
 

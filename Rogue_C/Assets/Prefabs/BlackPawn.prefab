@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlackPawn
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5cbc1ed422b6e8941a3a05af0bf42baf, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -96,6 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dc265ac3acabcf4cab1b27e1b4da062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  squareLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!136 &7841162392781309222
 CapsuleCollider:
   m_ObjectHideFlags: 0
