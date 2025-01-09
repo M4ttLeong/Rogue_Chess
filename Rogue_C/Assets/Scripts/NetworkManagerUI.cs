@@ -12,16 +12,19 @@ public class NetworkManagerUI : MonoBehaviour
     {
         serverButton.onClick.AddListener(() =>
         {
+            Debug.Log("Starting a server!");
             NetworkManager.Singleton.StartServer();
         });
 
         hostButton.onClick.AddListener(() =>
         {
+            Debug.Log("Starting a host!");
             NetworkManager.Singleton.StartHost();
         });
 
         clientButton.onClick.AddListener(() =>
         {
+            Debug.Log("Starting a client!");
             NetworkManager.Singleton.StartClient();
         });
     }

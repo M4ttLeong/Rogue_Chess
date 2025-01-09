@@ -1,7 +1,7 @@
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
+using Unity.Netcode;
 
-public class ChessBoardManager : MonoBehaviour
+public class ChessBoardManager : NetworkBehaviour
 {
     [SerializeField] private GameObject WhiteSquare;
     [SerializeField] private GameObject BlackSquare;
@@ -23,12 +23,37 @@ public class ChessBoardManager : MonoBehaviour
 
     private bool canHoverOverPieces;
 
+    public static ChessBoardManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if(Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
+        {
+            // Host initializes the chessboard and synchronizes to clients
+            canHoverOverPieces = true;
+            InitializeBoardServerRpc();
+        }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        canHoverOverPieces = true;
+        //Commented out since moving to the onnetworkspawn()
+        //canHoverOverPieces = true;
         //InitBoard();
-        InitBoard2();
+        //InitBoard2();
     }
 
     public Square[,] GetChessBoard()
@@ -275,6 +300,25 @@ public class ChessBoardManager : MonoBehaviour
     {
         canHoverOverPieces = boo;
     }
+
+    /*Networking code*/
+
+    //Server RPC, command issued from the client to the server
+    //Host is also a client so it can send these commands as well
+    //Remote procedure call
+    [ServerRpc(RequireOwnership = false)]
+    public void InitializeBoardServerRpc()
+    {
+        SpawnBoardClientRpc();
+    }
+
+    //Client RPC, command issued from the server to all of the clients
+    [ClientRpc]
+    public void SpawnBoardClientRpc()
+    {
+        InitBoard2();  // Your method to set up the chessboard
+    }
+
     void Update()
     {
         
