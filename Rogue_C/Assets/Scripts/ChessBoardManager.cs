@@ -84,6 +84,10 @@ public class ChessBoardManager : NetworkBehaviour
                 GameObject squarePrefab = squareColor == Color.white ? WhiteSquare : BlackSquare;
                 GameObject squareVisual = Instantiate(squarePrefab);
 
+                NetworkObject squareNetworkObject = squareVisual.GetComponent<NetworkObject>();
+                squareNetworkObject.Spawn();
+
+
                 Vector3 position = new Vector3(j * squareSize, -0.5f, 7 - i * squareSize);
 
                 squareVisual.transform.position = position;
@@ -126,6 +130,11 @@ public class ChessBoardManager : NetworkBehaviour
         {
             //Create white pawn representation
             GameObject whitePawn = Instantiate(WhitePawn);
+
+            //Spawn the network object
+            NetworkObject whitePawnObject = whitePawn.GetComponent<NetworkObject>();
+            whitePawnObject.Spawn();
+
             Vector3 pos = new Vector3(i * squareSize, 0, 1 * squareSize);
             whitePawn.transform.position = pos;
 
@@ -142,6 +151,11 @@ public class ChessBoardManager : NetworkBehaviour
         for (int i = 0; i < 8; ++i)
         {
             GameObject blackPawn = Instantiate(BlackPawn);
+
+            //Spawn the network object
+            NetworkObject blackPawnObject = blackPawn.GetComponent<NetworkObject>();
+            blackPawnObject.Spawn();
+
             Vector3 pos = new Vector3(i * squareSize, 0, 6 * squareSize);
             blackPawn.transform.position = pos;
 
@@ -281,7 +295,7 @@ public class ChessBoardManager : NetworkBehaviour
 
     public Piece IsSquareOccupied(int x, int y)
     {
-        Debug.Log("Is there a piece in this square: " + chessboard[x, y].occupyingPiece);
+        Debug.Log("Is there a piece in this square: " + x + ',' + y);
         return chessboard[x,y].occupyingPiece;
     }
 
@@ -316,7 +330,7 @@ public class ChessBoardManager : NetworkBehaviour
     [ClientRpc]
     public void SpawnBoardClientRpc()
     {
-        InitBoard2();  // Your method to set up the chessboard
+        InitBoard2();  
     }
 
     void Update()

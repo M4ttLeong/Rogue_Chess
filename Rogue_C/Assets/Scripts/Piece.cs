@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public abstract class Piece : MonoBehaviour
+public abstract class Piece : NetworkBehaviour
 {
     public enum PieceColor { White, Black }
     public PieceColor color { get; private set; }
@@ -16,7 +17,7 @@ public abstract class Piece : MonoBehaviour
 
     private List<Vector2Int> availMoves;
 
-    private ChessBoardManager chessboardManager;
+    private ChessBoardManager chessboardManager = ChessBoardManager.Instance;
     //Could set up the current square in the init step
 
     [SerializeField] private LayerMask squareLayerMask;
@@ -26,12 +27,20 @@ public abstract class Piece : MonoBehaviour
         //availMoves need to be updated after each turn
         availMoves = GetAvailableMoves(chessboardManager);
     }
+
+
     private void OnMouseEnter()
     {
+        //I think everytime you hover over the piece, get it's available moves. This might not be best
+        availMoves = GetAvailableMoves(chessboardManager);
+        Debug.Log("Can hover over pieces?" + chessboardManager.getCanHoverOverPieces());
         if (chessboardManager.getCanHoverOverPieces())
         {
-            ShowAvailableMoves(availMoves);
-            //DebugHighLight(Color.red);
+            if (NetworkManager.Singleton.IsClient)
+            {
+                ShowAvailableMoves();
+                //DebugHighLight(Color.red);
+            }
         }
     }
 
@@ -40,7 +49,7 @@ public abstract class Piece : MonoBehaviour
         if (chessboardManager.getCanHoverOverPieces())
         {
             //ResetHighlight();
-            HideAvailableMoves(availMoves);
+            HideAvailableMoves();
         }
     }
 
@@ -53,7 +62,7 @@ public abstract class Piece : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        if (isDragging)
+        if (isDragging && IsOwner)
         {
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);  // Horizontal plane at y = 0
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -68,18 +77,22 @@ public abstract class Piece : MonoBehaviour
 
     private void OnMouseUp()
     {
-        HideAvailableMoves(availMoves);
+        
         if (isDragging)
         {
-            Debug.Log("Mouse click released");
-            Square startingSquare = chessboardManager.GetSquare(position.x, position.y);
+            isDragging = false;
+            chessboardManager.setCanHoverOverPieces(true);
+            HideAvailableMoves();
+
+            //Square startingSquare = chessboardManager.GetSquare(position.x, position.y);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, squareLayerMask))
             {
                 Square targetSquare = hit.collider.GetComponent<Square>();
-                Debug.Log("TARGET SQUARE: " + targetSquare);
                 if (targetSquare != null)
                 {
+                    RequestMoveServerRpc(targetSquare.position);
+                    /*
                     //Need to check if the square we're moving to is valid
                     if (availMoves.Contains(targetSquare.position))
                     {
@@ -99,53 +112,53 @@ public abstract class Piece : MonoBehaviour
                         transform.position = new Vector3(targetSquare.position.y, 0f, 7 - targetSquare.position.x);
 
                         availMoves = GetAvailableMoves(chessboardManager);
-                        //Debug.Log("Let go of piece at square: " + square.PositionToChessNotation(square.position));
+                        //Debug.Log("Let go of piece at square: " + square.PositionToChessNotation(square.position))
+                        
                     }
                     else
                     {
                         transform.position = new Vector3(this.position.y, 0f, 7 - this.position.x);
-                    }
+                    }*/
+                } else
+                {
+                    ResetPiecePosition();
                 }
-            } else
+            }
+            else
             {
                 //We did not hit a square in our raycast
-                transform.position = new Vector3(this.position.y, 0f, 7 - this.position.x);
+                ResetPiecePosition();
 
             }
-            isDragging = false;
-            chessboardManager.setCanHoverOverPieces(true);
             
-        }
-        //ResetPosition();
-    }
 
-    private void ResetPosition()
-    {
-        transform.position = new Vector3(0,0,0);
+        }
+        
     }
+    
 
     public virtual void Initialize(PieceColor color, Vector2Int position, ChessBoardManager cBM)
     {
         this.color = color;
         this.position = position;
-        this.chessboardManager = cBM;
+        //this.chessboardManager = cBM;
         this.renderer = GetComponent<Renderer>();
     }
 
     //In order for a piece to get a list of available moves, it would need to see the chessboard
     public abstract List<Vector2Int> GetAvailableMoves(ChessBoardManager cBM);
 
-    private void ShowAvailableMoves(List<Vector2Int> availMoves)
+    private void ShowAvailableMoves()
     {
-        foreach (Vector2Int move in availMoves)
+        foreach (Vector2Int move in this.availMoves)
         {
             chessboardManager.GetChessBoard()[move.x, move.y].Highlight(Color.red);
         }
     }
 
-    private void HideAvailableMoves(List<Vector2Int> availMoves)
+    private void HideAvailableMoves()
     {
-        foreach (Vector2Int move in availMoves)
+        foreach (Vector2Int move in this.availMoves)
         {
             chessboardManager.GetChessBoard()[move.x, move.y].ResetHighlight();
         }
@@ -174,4 +187,60 @@ public abstract class Piece : MonoBehaviour
         return pos.x >= 0 && pos.x < 8 && pos.y >= 0 && pos.y < 8;
     }
 
+    /*Networking code*/
+
+    [ServerRpc(RequireOwnership = false)]
+    public void HighlightMovesServerRpc()
+    {
+        //Not sure you actually want this networked? Highlighting might be best for just your client
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestMoveServerRpc(Vector2Int targetPosition)
+    {
+        Square startingSquare = chessboardManager.GetSquare(position.x, position.y);
+        Debug.Log("Starting Square is : " + startingSquare.PositionToChessNotation());
+
+        Square targetSquare = chessboardManager.GetSquare(targetPosition.x, targetPosition.y);
+        Debug.Log("Starting Square is : " + targetSquare.PositionToChessNotation());
+
+        if (availMoves.Contains(targetPosition))
+        {
+            //Capturing logic
+            if(targetSquare.occupyingPiece != null && targetSquare.occupyingPiece != this)
+            {
+                Destroy(targetSquare.occupyingPiece.gameObject);
+            }
+
+            //Update board
+            startingSquare.occupyingPiece = null;
+            targetSquare.occupyingPiece = this;
+            position = targetPosition;
+
+            //Notify clients of update
+            UpdatePiecePositionClientRpc(targetPosition);
+        } else
+        {
+            ResetPiecePositionClientRpc();
+        }
+    }
+
+    private void ResetPiecePosition()
+    {
+        //Return the piece to it's last valid position
+        transform.position = new Vector3(position.y, 0f, 7 - position.x);
+    }
+
+    [ClientRpc]
+    private void UpdatePiecePositionClientRpc(Vector2Int targetPosition)
+    {
+        transform.position = new Vector3(targetPosition.y, 0f, 7 - targetPosition.x);
+    }
+
+    [ClientRpc]
+    private void ResetPiecePositionClientRpc()
+    {
+        ResetPiecePosition();
+    }
 }
+

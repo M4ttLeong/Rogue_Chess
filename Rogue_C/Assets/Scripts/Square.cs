@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class Square : MonoBehaviour
+public class Square : NetworkBehaviour
 {
     //Vector2 to show position on chessboard (0,0) = A1
     public Vector2Int position;
@@ -27,7 +27,7 @@ public class Square : MonoBehaviour
     private void OnMouseEnter()
     {
         //Highlight(Color.red);
-        Debug.Log("Square pos: " + PositionToChessNotation(this.position));
+        Debug.Log("Square pos: " + PositionToChessNotation());
     }
 
     private void OnMouseExit()
@@ -45,11 +45,11 @@ public class Square : MonoBehaviour
         renderer.material.color = this.color;
     }
 
-    public string PositionToChessNotation(Vector2Int position)
+    public string PositionToChessNotation()
     {
-        char file = (char)('a' + position.y);
+        char file = (char)('a' + this.position.y);
 
-        int rank = 8 - position.x;
+        int rank = 8 - this.position.x;
 
         return $"{file}{rank}"; 
     }
